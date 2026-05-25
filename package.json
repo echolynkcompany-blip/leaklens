@@ -6,10 +6,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
-<<<<<<< HEAD
-=======
     "@supabase/supabase-js": "^2.39.0",
->>>>>>> fcaf2bab (initial LeakLens build)
     "recharts": "^2.10.0",
     "papaparse": "^5.4.1",
     "jspdf": "^2.5.1",
@@ -17,12 +14,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-<<<<<<< HEAD
-    "build": "react-scripts build",
-    "test": "react-scripts test"
-=======
     "build": "react-scripts build"
->>>>>>> fcaf2bab (initial LeakLens build)
   },
   "browserslist": {
     "production": [">0.2%", "not dead", "not op_mini all"],
