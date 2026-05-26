@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { supabase } from '../supabase';
-import { parseCSV, detectCSVType, normalizeCallRow, normalizeApptRow, normalizeLeadRow } from '../engine';
+import { parseCSV, detectCSVType, normalizeCallRow, normalizeApptRow, normalizeLeadRow, calculateMetrics } from '../engine';
 import { Card, CardTitle } from './UI';
 import { Header } from './Dashboard';
 
@@ -9,6 +9,25 @@ const TYPES = [
   { id:'appts', label:'Appointments',  hint:'appointments.csv — Dentrix / Eaglesoft / any PMS', icon:'◇' },
   { id:'leads', label:'Leads',         hint:'leads.csv — CRM, web form, or manual list',        icon:'◉' },
 ];
+
+async function saveSnapshot(practice, calls, appts, leads) {
+  if (!practice?.id || practice.id.startsWith('demo')) return;
+  const m = calculateMetrics(calls, appts, leads, practice.settings || {});
+  await supabase.from('month_snapshots').upsert({
+    practice_id:       practice.id,
+    month:             practice.month || 'Unknown',
+    total_leak:        Math.round(m.totalLeak),
+    missed_call_leak:  Math.round(m.missedCallLeak),
+    noshow_leak:       Math.round(m.noShowLeak),
+    cancellation_leak: Math.round(m.cancellationLeak),
+    lead_leak:         Math.round(m.unbookedLeadLeak),
+    leak_score:        m.leakScore,
+    missed_calls:      m.missedCalls,
+    no_shows:          m.noShows,
+    canceled:          m.canceled,
+    unbooked_leads:    m.unbookedLeads,
+  }, { onConflict: 'practice_id,month' });
+}
 
 export default function UploadPage({ practice, updatePractice }) {
   const [statuses, setStatuses] = useState({});
@@ -26,34 +45,46 @@ export default function UploadPage({ practice, updatePractice }) {
 
       const headers = Object.keys(raw[0]);
       const detected = detectCSVType(headers);
-      const useType = type; // trust the zone they dropped into
+      const useType = type;
 
       let normalized = [];
+      let updatedPractice = { ...practice };
+
       if (useType === 'calls' || detected === 'calls') {
-        normalized = raw.map(normalizeCallRow).filter(r => r.date || r.name);
-        // Delete old, insert new
+        normalized = raw.map(normalizeCallRow).filter(r => r.date || r.status);
         await supabase.from('calls').delete().eq('practice_id', practice.id);
         if (normalized.length) {
           await supabase.from('calls').insert(normalized.map(r => ({ ...r, practice_id: practice.id })));
         }
+        updatedPractice.calls = normalized;
         updatePractice({ calls: normalized });
       } else if (useType === 'appts' || detected === 'appointments') {
-        normalized = raw.map(normalizeApptRow).filter(r => r.date || r.patient);
+        normalized = raw.map(normalizeApptRow).filter(r => r.date || r.status);
         await supabase.from('appointments').delete().eq('practice_id', practice.id);
         if (normalized.length) {
           await supabase.from('appointments').insert(normalized.map(r => ({ ...r, practice_id: practice.id })));
         }
+        updatedPractice.appts = normalized;
         updatePractice({ appts: normalized });
       } else if (useType === 'leads' || detected === 'leads') {
-        normalized = raw.map(normalizeLeadRow).filter(r => r.date || r.name);
+        normalized = raw.map(normalizeLeadRow).filter(r => r.date || r.source);
         await supabase.from('leads').delete().eq('practice_id', practice.id);
         if (normalized.length) {
           await supabase.from('leads').insert(normalized.map(r => ({ ...r, practice_id: practice.id })));
         }
+        updatedPractice.leads = normalized;
         updatePractice({ leads: normalized });
       } else {
         throw new Error('Could not detect file type. Check that headers include words like "patient", "status", "missed", "provider".');
       }
+
+      // Save monthly snapshot for trend tracking
+      await saveSnapshot(
+        practice,
+        updatedPractice.calls  || practice.calls  || [],
+        updatedPractice.appts  || practice.appts  || [],
+        updatedPractice.leads  || practice.leads  || [],
+      );
 
       setStatuses(s=>({...s,[type]:`✓ ${normalized.length} rows saved`}));
     } catch (err) {
@@ -67,7 +98,7 @@ export default function UploadPage({ practice, updatePractice }) {
       <Header title="Upload data" sub={practice ? `${practice.name} · ${practice.month}` : ''} />
 
       <div style={{background:'var(--amber-dim)',border:'1px solid rgba(245,166,35,0.25)',borderRadius:'var(--radius)',padding:'0.875rem 1rem',marginBottom:'1.25rem',fontSize:13,color:'var(--text2)'}}>
-        <strong style={{color:'var(--amber)'}}>Flexible column mapping.</strong> Headers don't need to match exactly — LeakLens auto-detects columns. Once uploaded, data is saved permanently to this practice.
+        <strong style={{color:'var(--amber)'}}>Flexible column mapping.</strong> Headers don't need to match exactly. Each upload saves a monthly snapshot for trend tracking — upload a new month by changing the reporting month in Settings first.
       </div>
 
       <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'1rem',marginBottom:'1.5rem'}}>
@@ -111,12 +142,21 @@ export default function UploadPage({ practice, updatePractice }) {
       </Card>
 
       <Card>
+        <CardTitle>Monthly workflow</CardTitle>
+        <div style={{fontSize:13,color:'var(--text2)',lineHeight:1.8}}>
+          <div style={{marginBottom:8}}><strong style={{color:'var(--text)'}}>Month 1 (current):</strong> Upload all three CSVs. Dashboard populates. Snapshot saved automatically.</div>
+          <div style={{marginBottom:8}}><strong style={{color:'var(--text)'}}>Month 2:</strong> Go to Settings → update Reporting month to next month. Upload new CSVs. New snapshot saved. Trend chart now shows two months.</div>
+          <div><strong style={{color:'var(--text)'}}>Month 3+:</strong> Repeat. Each month adds one point to the trend chart. The before/after picture builds automatically.</div>
+        </div>
+      </Card>
+
+      <Card>
         <CardTitle>Expected column names (flexible)</CardTitle>
         <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'1rem',fontSize:12,color:'var(--text3)'}}>
           {[
-            {label:'Call log', cols:['Date','Time','Caller Name','Phone Number','Call Status','Duration','Booked?','Notes']},
-            {label:'Appointments', cols:['Date','Time','Patient Name','Appointment Type','Provider','Status','Estimated Value','Notes']},
-            {label:'Leads', cols:['Date','Lead Name','Phone Number','Source','Requested Service','Status','Booked?','Value','Notes']},
+            {label:'Call log', cols:['Date','Time','Call Type','Call Status','Duration','Booked?','Notes']},
+            {label:'Appointments', cols:['Date','Time','Appointment Type','Provider','Status','Estimated Value ($)','Notes']},
+            {label:'Leads', cols:['Date','Lead Source','Requested Service','Response Time','Lead Status','Booked?','Est Value ($)','Notes']},
           ].map(g=>(
             <div key={g.label}>
               <div style={{color:'var(--text2)',marginBottom:6,fontWeight:500}}>{g.label}</div>

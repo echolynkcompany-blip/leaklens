@@ -11,7 +11,6 @@ import UploadPage from './components/UploadPage';
 import ReportPage from './components/ReportPage';
 import SettingsPage from './components/SettingsPage';
 import AdminHome from './components/AdminHome';
-import AdminSettings from './components/AdminSettings';
 
 const DEMO1_TREND = [
   {month:'Jan',amount:9400},{month:'Feb',amount:10200},{month:'Mar',amount:11800},{month:'Apr',amount:10900},{month:'May',amount:12100},
@@ -289,8 +288,8 @@ export default function App() {
   }
 
   const practice = practices.find(p => p.id === activePracticeId) || practices[0];
-  const pageProps = { practice, metrics:practice?.metrics, updatePractice, setPage, user, practices, setActivePracticeId, activePracticeId };
-  const pages = { home:AdminHome, admin_settings:AdminSettings, dashboard:Dashboard, leaks:LeakPage, recovery:RecoveryPage, providers:ProvidersPage, upload:UploadPage, report:ReportPage, settings:SettingsPage };
+  const pageProps = { practice, metrics:practice?.metrics, updatePractice, setPage, user, practices, setActivePracticeId };
+  const pages = { home:AdminHome, dashboard:Dashboard, leaks:LeakPage, recovery:RecoveryPage, providers:ProvidersPage, upload:UploadPage, report:ReportPage, settings:SettingsPage };
   const PageComponent = pages[page] || AdminHome;
 
   if (!authChecked) return <div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',background:'var(--bg)',color:'var(--text3)',fontSize:14}}>Loading…</div>;

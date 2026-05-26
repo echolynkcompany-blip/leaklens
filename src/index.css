@@ -1,31 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg: #0a0c10;
-  --bg2: #10131a;
-  --bg3: #161b24;
-  --bg4: #1c2230;
-  --border: rgba(255,255,255,0.07);
-  --border2: rgba(255,255,255,0.13);
-  --text: #eef0f4;
-  --text2: #8b92a0;
-  --text3: #4a5261;
-  --teal: #00c896;
-  --teal-dim: rgba(0,200,150,0.10);
-  --teal-border: rgba(0,200,150,0.25);
-  --red: #f5534d;
-  --red-dim: rgba(245,83,77,0.10);
-  --amber: #f5a623;
-  --amber-dim: rgba(245,166,35,0.10);
-  --blue: #4f8ef7;
-  --blue-dim: rgba(79,142,247,0.10);
-  --purple: #a78bfa;
-  --purple-dim: rgba(167,139,250,0.10);
-  --radius: 10px;
+  /* ── Sage green light theme ── */
+  --bg:        #F7F8F5;
+  --bg2:       #FFFFFF;
+  --bg3:       #F0F2EC;
+  --bg4:       #E8EBE3;
+  --border:    #E2E6DA;
+  --border2:   #C8CEBC;
+
+  /* Text */
+  --text:      #1A2112;
+  --text2:     #4A5C3A;
+  --text3:     #8A9A78;
+
+  /* Primary — sage green */
+  --teal:          #5A7A4A;
+  --teal-dim:      rgba(90,122,74,0.10);
+  --teal-border:   rgba(90,122,74,0.25);
+
+  /* Accent colors — muted to match light theme */
+  --red:       #C0392B;
+  --red-dim:   rgba(192,57,43,0.08);
+  --amber:     #B07D2A;
+  --amber-dim: rgba(176,125,42,0.10);
+  --blue:      #2E6EA6;
+  --blue-dim:  rgba(46,110,166,0.10);
+  --purple:    #7B5EA7;
+  --purple-dim:rgba(123,94,167,0.10);
+
+  /* Chart colors — muted but readable on white */
+  --chart-red:    #D95F4B;
+  --chart-amber:  #C98B3A;
+  --chart-purple: #8B6BB5;
+  --chart-blue:   #4A7FC0;
+
+  --radius:    10px;
   --radius-lg: 14px;
-  --sidebar: 224px;
-  --font: 'DM Sans', -apple-system, sans-serif;
-  --mono: 'DM Mono', 'Menlo', monospace;
+  --sidebar:   232px;
+  --font:      'Inter', -apple-system, sans-serif;
+  --mono:      'DM Mono', 'Menlo', monospace;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(26,33,18,0.08), 0 1px 2px rgba(26,33,18,0.04);
+  --shadow:    0 4px 12px rgba(26,33,18,0.08), 0 2px 4px rgba(26,33,18,0.04);
+  --shadow-lg: 0 8px 24px rgba(26,33,18,0.10), 0 4px 8px rgba(26,33,18,0.06);
 }
 
 body {
@@ -39,11 +60,22 @@ body {
 }
 
 button { font-family: var(--font); cursor: pointer; border: none; }
-input, select, textarea { font-family: var(--font); }
+input, select, textarea {
+  font-family: var(--font);
+  background: var(--bg2);
+  color: var(--text);
+}
 
-::-webkit-scrollbar { width: 4px; height: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
+input::placeholder { color: var(--text3); }
+
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--bg3); }
 ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text3); }
 
-.fade-in { animation: fadeIn 0.2s ease; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+.fade-in { animation: fadeIn 0.18s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Table base */
+table { border-collapse: collapse; width: 100%; }
+th, td { text-align: left; }
