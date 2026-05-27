@@ -11,9 +11,10 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/audit" element={<AuditForm />} />
+        <Route path="/" element={<App />} />
         <Route path="/app/*" element={<App />} />
+        <Route path="/audit" element={<AuditForm />} />
+        <Route path="/landing" element={<LandingPage />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

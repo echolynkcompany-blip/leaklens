@@ -64,12 +64,7 @@ export default function LoginPage({ onLogin }) {
           </button>
         </form>
 
-        <div style={styles.footer}>
-          <button onClick={() => navigate('/')} style={styles.homeLink}>
-            ← Back to leaklens.cloud
-          </button>
-          <div style={{ marginTop: 6 }}>An Echolynk product</div>
-        </div>
+        <div style={styles.footer}>An Echolynk product</div>
       </div>
     </div>
   );
