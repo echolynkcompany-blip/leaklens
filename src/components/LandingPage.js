@@ -206,12 +206,7 @@ export default function LandingPage() {
           </div>
         </div>
 
-        <div style={{ textAlign:'center', marginTop:32 }}>
-          <button onClick={() => window.open('https://y-six-zeta-18.vercel.app', '_blank')} style={S.btnSecondary}>
-            ▶ Try the live demo
-          </button>
-          <div style={{ fontSize:12, color:'var(--text3,#8A9A78)', marginTop:8 }}>Opens the LeakLens demo with sample practice data — no login required</div>
-        </div>
+
       </section>
 
       {/* ── PRICING ── */}
