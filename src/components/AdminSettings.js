@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { InvoiceModal } from './InvoiceGenerator';
 import { supabase } from '../supabase';
 import { Card, CardTitle, Divider } from './UI';
 
@@ -8,9 +9,9 @@ const DEFAULT_SETTINGS = {
   company_name: 'Echolynk',
   product_name: 'LeakLens',
   admin_email: 'echolynkcompany@gmail.com',
-  contact_email: 'hello@leaklens.io',
+  contact_email: 'hello@leaklens.co',
   phone: '813-904-2995',
-  website: 'leaklens.io',
+  website: 'leaklens.co',
   tier1_rate: 497,
   tier2_rate: 1500,
   audit_rate: 297,
@@ -45,6 +46,7 @@ export default function AdminSettings({ practices }) {
   });
   const [newClient, setNewClient] = useState({ name: '', rate: 497, tier: 'Tier 1 — Visibility', status: 'Active', start_date: '', notes: '' });
   const [addingClient, setAddingClient] = useState(false);
+  const [invoiceClient, setInvoiceClient] = useState(null);
 
   const clients = practices.filter(p => !p.id?.startsWith('demo'));
 
@@ -155,7 +157,7 @@ export default function AdminSettings({ practices }) {
               {inp('admin_email',  'Admin login email', 'Your Supabase login')}
               {inp('contact_email','Client-facing email', 'What you give to practices')}
               {inp('phone',        'Contact phone', 'Dispatch line or direct number')}
-              {inp('website',      'Website / domain', 'leaklens.io when purchased')}
+              {inp('website',      'Website / domain', 'leaklens.co when purchased')}
             </div>
           </Card>
           <Card>
@@ -268,7 +270,9 @@ export default function AdminSettings({ practices }) {
                         <input type="date" value={b.start_date||''} onChange={e => updateBilling(b.practice_id, 'start_date', e.target.value)}
                           style={{ background:'transparent', border:'none', color:'var(--text3)', fontSize:12, cursor:'pointer' }} />
                       </td>
-                      <td style={{ padding:'10px 8px' }}>
+                      <td style={{ padding:'10px 8px', whiteSpace:'nowrap' }}>
+                        <button onClick={() => setInvoiceClient(b)}
+                          style={{ background:'var(--teal-dim)', border:'1px solid var(--teal-border)', color:'var(--teal)', cursor:'pointer', fontSize:11, fontWeight:600, padding:'4px 8px', borderRadius:6, marginRight:6 }}>Invoice</button>
                         <button onClick={() => removeClient(b.practice_id)}
                           style={{ background:'transparent', border:'none', color:'var(--text3)', cursor:'pointer', fontSize:12 }}>✕</button>
                       </td>
@@ -317,6 +321,13 @@ export default function AdminSettings({ practices }) {
           </div>
         </>
       )}
+    {invoiceClient && (
+      <InvoiceModal
+        client={invoiceClient}
+        settings={form}
+        onClose={() => setInvoiceClient(null)}
+      />
+    )}
     </div>
   );
 }

@@ -7,6 +7,7 @@ const ADMIN_NAV = [
 ];
 
 const PRACTICE_NAV = [
+  { id: 'onboarding',label: 'Onboarding',      icon: '◎' },
   { id: 'dashboard', label: 'Dashboard',       icon: '⬡' },
   { id: 'leaks',     label: 'Revenue leaks',   icon: '◈' },
   { id: 'recovery',  label: 'Recovery queue',  icon: '◎' },

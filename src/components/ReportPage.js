@@ -210,7 +210,7 @@ export default function ReportPage({ practice, metrics }) {
     doc.setLineWidth(0.3);
     doc.line(0, 280, W, 280);
     doc.setFontSize(8); doc.setFont('helvetica', 'normal'); doc.setTextColor(...textLight);
-    doc.text('LeakLens  ·  An Echolynk Product  ·  leaklens.io', 15, 290);
+    doc.text('LeakLens  ·  An Echolynk Product', 15, 290);
     doc.text(new Date().toLocaleDateString(), W - 15, 290, { align: 'right' });
 
     doc.save(`LeakLens-${practice.name.replace(/\s+/g, '-')}-${practice.month.replace(/\s+/g, '-')}.pdf`);
@@ -234,7 +234,7 @@ export default function ReportPage({ practice, metrics }) {
           </div>
           <div style={{ textAlign:'right' }}>
             <div style={{ fontSize:11, color:'var(--text3)' }}>An Echolynk product</div>
-            <div style={{ fontSize:11, color:'var(--text3)', marginTop:2 }}>leaklens.io</div>
+
           </div>
         </div>
         <Divider />

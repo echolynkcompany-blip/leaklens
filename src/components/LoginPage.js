@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '../supabase';
 
 export default function LoginPage({ onLogin }) {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -62,7 +64,12 @@ export default function LoginPage({ onLogin }) {
           </button>
         </form>
 
-        <div style={styles.footer}>An Echolynk product</div>
+        <div style={styles.footer}>
+          <button onClick={() => navigate('/')} style={styles.homeLink}>
+            ← Back to leaklens.cloud
+          </button>
+          <div style={{ marginTop: 6 }}>An Echolynk product</div>
+        </div>
       </div>
     </div>
   );
@@ -82,4 +89,5 @@ const styles = {
   error: { fontSize: 13, color: 'var(--red)', background: 'var(--red-dim)', padding: '9px 12px', borderRadius: 8, border: '1px solid rgba(192,57,43,0.15)' },
   btn: { padding: '12px', borderRadius: 9, background: 'var(--teal)', color: '#FFFFFF', fontSize: 14, fontWeight: 700, marginTop: 4, transition: 'opacity 0.15s', boxShadow: '0 2px 6px rgba(90,122,74,0.30)' },
   footer: { textAlign: 'center', fontSize: 11, color: 'var(--text3)', marginTop: '1.5rem' },
+  homeLink: { background: 'transparent', border: 'none', color: 'var(--teal)', fontSize: 12, fontWeight: 600, cursor: 'pointer', textDecoration: 'underline' },
 };

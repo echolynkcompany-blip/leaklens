@@ -12,6 +12,7 @@ import ReportPage from './components/ReportPage';
 import SettingsPage from './components/SettingsPage';
 import AdminHome from './components/AdminHome';
 import AdminSettings from './components/AdminSettings';
+import OnboardingPage from './components/OnboardingPage';
 
 const DEMO1_TREND = [
   {month:'Jan',amount:9400},{month:'Feb',amount:10200},{month:'Mar',amount:11800},{month:'Apr',amount:10900},{month:'May',amount:12100},
@@ -266,7 +267,7 @@ export default function App() {
     const newPrac = { id:data.id, name:data.name, month:data.month, tag:'Client', settings:DEMO_SETTINGS, calls:[], appts:[], leads:[], trend:[{month:data.month,amount:0}], metrics:m };
     setPractices(prev => [...prev, newPrac]);
     setActivePracticeId(data.id);
-    setPage('upload');
+    setPage('onboarding');
   }
 
   function updatePractice(updates) {
@@ -290,7 +291,7 @@ export default function App() {
 
   const practice = practices.find(p => p.id === activePracticeId) || practices[0];
   const pageProps = { practice, metrics:practice?.metrics, updatePractice, setPage, user, practices, setActivePracticeId, activePracticeId };
-  const pages = { home:AdminHome, admin_settings:AdminSettings, dashboard:Dashboard, leaks:LeakPage, recovery:RecoveryPage, providers:ProvidersPage, upload:UploadPage, report:ReportPage, settings:SettingsPage };
+  const pages = { home:AdminHome, admin_settings:AdminSettings, onboarding:OnboardingPage, dashboard:Dashboard, leaks:LeakPage, recovery:RecoveryPage, providers:ProvidersPage, upload:UploadPage, report:ReportPage, settings:SettingsPage };
   const PageComponent = pages[page] || AdminHome;
 
   if (!authChecked) return <div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',background:'var(--bg)',color:'var(--text3)',fontSize:14}}>Loading…</div>;
