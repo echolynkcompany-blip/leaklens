@@ -99,12 +99,14 @@ export default function SettingsPage({ practice, updatePractice }) {
       )}
 
       <form onSubmit={handleSave}>
+        {/* Practice Info */}
         <Card>
           <CardTitle>Practice info</CardTitle>
           {txt('name',  'Practice name', null)}
           {txt('month', 'Reporting month', 'e.g. June 2026')}
         </Card>
 
+        {/* Practice Type Presets */}
         {!isDemo && (
           <Card>
             <CardTitle>Practice type — quick setup</CardTitle>
@@ -125,41 +127,45 @@ export default function SettingsPage({ practice, updatePractice }) {
           </Card>
         )}
 
+        {/* Revenue Assumptions */}
         <Card>
           <CardTitle>Revenue assumptions</CardTitle>
           <div style={{fontSize:13,color:'var(--text3)',marginBottom:'1rem',lineHeight:1.6}}>
             These values calculate estimated revenue leaks. Match them to this practice's actual averages.
           </div>
-          {num('avg_patient_value', 'Average patient value ($)', 'Typical revenue per completed appointment')}
+          {num('avg_patient_value',        'Average patient value ($)',       'Typical revenue per completed appointment')}
+
           <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'1rem'}}>
-            {num('missed_call_booking_rate', 'Missed call booking rate', 'e.g. 0.30 = 30% of missed calls would have booked', '0.01')}
-            {num('lead_conversion_rate', 'Lead conversion rate', 'e.g. 0.40 = 40% of unbooked leads would convert', '0.01')}
+            {num('missed_call_booking_rate', 'Missed call booking rate',  'e.g. 0.30 = 30% of missed calls would have booked', '0.01')}
+            {num('lead_conversion_rate',     'Lead conversion rate',       'e.g. 0.40 = 40% of unbooked leads would convert', '0.01')}
           </div>
+
           <Divider />
           <div style={{fontSize:12,color:'var(--text3)',marginBottom:'0.75rem',fontStyle:'italic'}}>
-            Industry benchmarks: booking rate 25-35% · lead conversion 35-45%
+            Industry benchmarks: booking rate 25–35% · lead conversion 35–45%
           </div>
         </Card>
 
+        {/* Leak Score Thresholds */}
         <Card>
           <CardTitle>Leak score thresholds</CardTitle>
           <div style={{fontSize:13,color:'var(--text3)',marginBottom:'1rem',lineHeight:1.6}}>
             When a rate exceeds these thresholds, points are deducted from the leak score.
           </div>
           <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'1rem'}}>
-            {num('missed_call_threshold', 'Missed call rate threshold', 'Deducts 15 pts · industry standard: 10%', '0.01')}
-            {num('no_show_threshold', 'No-show rate threshold', 'Deducts 15 pts · industry standard: 8%', '0.01')}
-            {num('cancellation_threshold', 'Cancellation rate threshold', 'Deducts 10 pts · industry standard: 10%', '0.01')}
-            {num('unbooked_lead_threshold', 'Unbooked lead rate threshold', 'Deducts 20 pts · industry standard: 20%', '0.01')}
+            {num('missed_call_threshold',   'Missed call rate threshold',    'Deducts 15 pts · industry standard: 10%', '0.01')}
+            {num('no_show_threshold',       'No-show rate threshold',        'Deducts 15 pts · industry standard: 8%',  '0.01')}
+            {num('cancellation_threshold',  'Cancellation rate threshold',   'Deducts 10 pts · industry standard: 10%', '0.01')}
+            {num('unbooked_lead_threshold', 'Unbooked lead rate threshold',  'Deducts 20 pts · industry standard: 20%', '0.01')}
           </div>
         </Card>
 
         {!isDemo && (
           <div style={{display:'flex',alignItems:'center',gap:12}}>
             <button type="submit" disabled={saving} style={S.saveBtn}>
-              {saving ? 'Saving...' : 'Save settings'}
+              {saving ? 'Saving…' : 'Save settings'}
             </button>
-            {saved && <span style={{fontSize:13,color:'var(--teal)',fontWeight:500}}>Saved - dashboard recalculated</span>}
+            {saved && <span style={{fontSize:13,color:'var(--teal)',fontWeight:500}}>✓ Saved — dashboard recalculated</span>}
           </div>
         )}
       </form>

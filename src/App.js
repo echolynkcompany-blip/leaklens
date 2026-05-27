@@ -13,6 +13,7 @@ import SettingsPage from './components/SettingsPage';
 import AdminHome from './components/AdminHome';
 import AdminSettings from './components/AdminSettings';
 import OnboardingPage from './components/OnboardingPage';
+import DemoTour from './components/DemoTour';
 
 const DEMO1_TREND = [
   {month:'Jan',amount:9400},{month:'Feb',amount:10200},{month:'Mar',amount:11800},{month:'Apr',amount:10900},{month:'May',amount:12100},
@@ -209,6 +210,11 @@ export default function App() {
   const [page,             setPage]             = useState('home');
   const [practices,        setPractices]        = useState([DEMO1, DEMO2, DEMO3]);
   const [activePracticeId, setActivePracticeId] = useState('demo1');
+  const [showTour, setShowTour] = useState(false);
+
+  useEffect(() => {
+    if (window.location.search.includes('demo=true')) setShowTour(true);
+  }, []);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -290,7 +296,8 @@ export default function App() {
   }
 
   const practice = practices.find(p => p.id === activePracticeId) || practices[0];
-  const pageProps = { practice, metrics:practice?.metrics, updatePractice, setPage, user, practices, setActivePracticeId, activePracticeId };
+  const liveMetrics = practice ? calculateMetrics(practice.calls || [], practice.appts || [], practice.leads || [], practice.settings || {}) : null;
+  const pageProps = { practice, metrics: liveMetrics, updatePractice, setPage, user, practices, setActivePracticeId, activePracticeId };
   const pages = { home:AdminHome, admin_settings:AdminSettings, onboarding:OnboardingPage, dashboard:Dashboard, leaks:LeakPage, recovery:RecoveryPage, providers:ProvidersPage, upload:UploadPage, report:ReportPage, settings:SettingsPage };
   const PageComponent = pages[page] || AdminHome;
 
@@ -303,6 +310,13 @@ export default function App() {
       <main style={{marginLeft:'var(--sidebar)',flex:1,padding:'2rem',maxWidth:'calc(100vw - var(--sidebar))',overflowX:'hidden'}}>
         <PageComponent {...pageProps} />
       </main>
+      {showTour && (
+        <DemoTour
+          onNavigate={setPage}
+          onSelectPractice={setActivePracticeId}
+          onClose={() => setShowTour(false)}
+        />
+      )}
     </div>
   );
 }
