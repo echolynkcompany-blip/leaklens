@@ -12,7 +12,7 @@ const PRESETS = [
   { label: 'Multi-Specialty',     avg: 480, note: 'Mix of general, ortho, implant. Use blended average.' },
 ];
 
-export default function SettingsPage({ practice, updatePractice }) {
+export default function SettingsPage({ practice, updatePractice, deletePractice }) {
   const [form, setForm] = useState(null);
   const [saving, setSaving] = useState(false);
   const [saved,  setSaved]  = useState(false);
@@ -169,6 +169,22 @@ export default function SettingsPage({ practice, updatePractice }) {
           </div>
         )}
       </form>
+    {/* Delete Practice */}
+    {!practice?.isDemo && (
+      <div style={{ marginTop:'2rem', padding:'1.25rem', background:'var(--red-dim)', border:'1px solid rgba(192,57,43,0.2)', borderRadius:'var(--radius)' }}>
+        <div style={{ fontSize:13, fontWeight:700, color:'var(--red)', marginBottom:6 }}>Delete this practice</div>
+        <p style={{ fontSize:12, color:'var(--text2)', lineHeight:1.6, marginBottom:12 }}>
+          This permanently deletes all data for {practice?.name} including calls, appointments, leads, and snapshots. This cannot be undone.
+        </p>
+        <button onClick={() => {
+          if (window.confirm('Permanently delete ' + practice?.name + ' and all its data? This cannot be undone.')) {
+            deletePractice(practice.id);
+          }
+        }} style={{ padding:'8px 16px', borderRadius:7, border:'none', background:'var(--red)', color:'white', fontSize:12, fontWeight:700, cursor:'pointer' }}>
+          Delete practice permanently
+        </button>
+      </div>
+    )}
     </div>
   );
 }

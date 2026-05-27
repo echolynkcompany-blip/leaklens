@@ -13,13 +13,15 @@ import SettingsPage from './components/SettingsPage';
 import AdminHome from './components/AdminHome';
 import AdminSettings from './components/AdminSettings';
 import OnboardingPage from './components/OnboardingPage';
+import VerticalSelector from './components/VerticalSelector';
+import { VERTICALS, DEFAULT_VERTICAL } from './verticals';
 import DemoTour from './components/DemoTour';
 
 const DEMO1_TREND = [
   {month:'Jan',amount:9400},{month:'Feb',amount:10200},{month:'Mar',amount:11800},{month:'Apr',amount:10900},{month:'May',amount:12100},
 ];
 const DEMO1 = {
-  id:'demo1', name:'Sunrise Dental Studio', month:'May 2026', tag:'Demo',
+  id:'demo1', name:'Sunrise Dental Studio', vertical:'dental', month:'May 2026', tag:'Demo',
   settings:DEMO_SETTINGS, calls:DEMO_CALLS, appts:DEMO_APPOINTMENTS, leads:DEMO_LEADS, trend:DEMO1_TREND,
   metrics:calculateMetrics(DEMO_CALLS,DEMO_APPOINTMENTS,DEMO_LEADS,DEMO_SETTINGS),
 };
@@ -69,7 +71,7 @@ const DEMO2_L = [
 ];
 const DEMO2_TREND = [{month:'Feb',amount:6800},{month:'Mar',amount:7400},{month:'Apr',amount:7100},{month:'May',amount:8250}];
 const DEMO2 = {
-  id:'demo2', name:'Tele Dental', month:'May 2026', tag:'Demo',
+  id:'demo2', name:'Tele Dental', vertical:'dental', month:'May 2026', tag:'Demo',
   settings:DEMO2_S, calls:DEMO2_C, appts:DEMO2_A, leads:DEMO2_L, trend:DEMO2_TREND,
   metrics:calculateMetrics(DEMO2_C,DEMO2_A,DEMO2_L,DEMO2_S),
 };
@@ -199,18 +201,56 @@ const DEMO3_L = [
 ];
 const DEMO3_TREND = [{month:'Feb',amount:24200},{month:'Mar',amount:27800},{month:'Apr',amount:29100},{month:'May',amount:31500}];
 const DEMO3 = {
-  id:'demo3', name:'Bright Smile Family Dentistry', month:'May 2026', tag:'Demo',
+  id:'demo3', name:'Bright Smile Family Dentistry', vertical:'dental', month:'May 2026', tag:'Demo',
   settings:DEMO3_S, calls:DEMO3_C, appts:DEMO3_A, leads:DEMO3_L, trend:DEMO3_TREND,
   metrics:calculateMetrics(DEMO3_C,DEMO3_A,DEMO3_L,DEMO3_S),
 };
+
+// ── Medical demos ──
+const MED1_S = {avgPatientValue:220,missedCallBookingRate:0.30,leadConversionRate:0.35,missedCallRateThreshold:0.12,noShowRateThreshold:0.10,cancellationRateThreshold:0.12,unbookedLeadRateThreshold:0.25};
+const MED1_C = [...Array(8).fill(0).map((_,i)=>({id:`m1mc${i}`,date:'2026-05-15',time:`${9+i}:00 AM`,status:'Missed',duration:0,booked:'No',notes:'New patient inquiry'})),...Array(38).fill(0).map((_,i)=>({id:`m1ac${i}`,date:'2026-05-15',time:`${9+i%8}:30 AM`,status:'Answered',duration:180+i*10,booked:i%3===0?'Yes':'No',notes:''}))];
+const MED1_A = [...Array(12).fill(0).map((_,i)=>({id:`m1ns${i}`,date:`2026-05-${10+i}`,time:'10:00 AM',type:'Annual Physical',provider:'Dr. Johnson',status:'No-Show',value:220,notes:''})),...Array(8).fill(0).map((_,i)=>({id:`m1cn${i}`,date:`2026-05-${10+i}`,time:'2:00 PM',type:'Sick Visit',provider:'Dr. Patel',status:'Canceled',value:185,notes:''})),...Array(45).fill(0).map((_,i)=>({id:`m1cp${i}`,date:`2026-05-${5+i%20}`,time:'11:00 AM',type:'Follow-up',provider:i%2===0?'Dr. Johnson':'Dr. Patel',status:'Completed',value:220,notes:''}))];
+const MED1_L = [...Array(18).fill(0).map((_,i)=>({id:`m1ul${i}`,date:`2026-05-${5+i}`,name:'',phone:'',source:'Website',service:'New Patient Visit',status:'Unbooked',booked:'No',value:220,notes:''})),...Array(8).fill(0).map((_,i)=>({id:`m1bl${i}`,date:`2026-05-${5+i}`,name:'',phone:'',source:'Referral',service:'Annual Physical',status:'Booked',booked:'Yes',value:220,notes:''}))];
+const MED1 = {id:'med_demo1',name:'Lakeside Family Medicine',month:'May 2026',tag:'Demo',isDemo:true,vertical:'medical',settings:MED1_S,calls:MED1_C,appts:MED1_A,leads:MED1_L,trend:[{month:'Jan 2026',amount:6800},{month:'Feb 2026',amount:7200},{month:'Mar 2026',amount:7600},{month:'Apr 2026',amount:8100},{month:'May 2026',amount:8800}],metrics:calculateMetrics(MED1_C,MED1_A,MED1_L,MED1_S)};
+
+const MED2_S = {avgPatientValue:185,missedCallBookingRate:0.30,leadConversionRate:0.35,missedCallRateThreshold:0.12,noShowRateThreshold:0.10,cancellationRateThreshold:0.12,unbookedLeadRateThreshold:0.25};
+const MED2_C = [...Array(22).fill(0).map((_,i)=>({id:`m2mc${i}`,date:'2026-05-15',time:`${8+i%10}:${i%2===0?'00':'30'} AM`,status:'Missed',duration:0,booked:'No',notes:'Patient inquiry'})),...Array(60).fill(0).map((_,i)=>({id:`m2ac${i}`,date:'2026-05-15',time:`${8+i%10}:00 AM`,status:'Answered',duration:120+i*5,booked:i%4===0?'Yes':'No',notes:''}))];
+const MED2_A = [...Array(18).fill(0).map((_,i)=>({id:`m2ns${i}`,date:`2026-05-${10+i%15}`,time:'9:00 AM',type:'Walk-in Visit',provider:'Dr. Williams',status:'No-Show',value:185,notes:''})),...Array(12).fill(0).map((_,i)=>({id:`m2cn${i}`,date:`2026-05-${10+i}`,time:'3:00 PM',type:'Follow-up',provider:'Dr. Chen',status:'Canceled',value:185,notes:''})),...Array(80).fill(0).map((_,i)=>({id:`m2cp${i}`,date:`2026-05-${5+i%20}`,time:'10:00 AM',type:'Walk-in Visit',provider:i%2===0?'Dr. Williams':'Dr. Chen',status:'Completed',value:185,notes:''}))];
+const MED2_L = [...Array(28).fill(0).map((_,i)=>({id:`m2ul${i}`,date:`2026-05-${3+i%22}`,name:'',phone:'',source:'Google',service:'Urgent Care Visit',status:'Unbooked',booked:'No',value:185,notes:''})),...Array(12).fill(0).map((_,i)=>({id:`m2bl${i}`,date:`2026-05-${3+i}`,name:'',phone:'',source:'Website',service:'Visit',status:'Booked',booked:'Yes',value:185,notes:''}))];
+const MED2 = {id:'med_demo2',name:'Riverside Urgent Care',month:'May 2026',tag:'Demo',isDemo:true,vertical:'medical',settings:MED2_S,calls:MED2_C,appts:MED2_A,leads:MED2_L,trend:[{month:'Jan 2026',amount:9200},{month:'Feb 2026',amount:10100},{month:'Mar 2026',amount:11400},{month:'Apr 2026',amount:12200},{month:'May 2026',amount:13600}],metrics:calculateMetrics(MED2_C,MED2_A,MED2_L,MED2_S)};
+
+// ── Chiro demo ──
+const CHIRO1_S = {avgPatientValue:85,missedCallBookingRate:0.28,leadConversionRate:0.30,missedCallRateThreshold:0.15,noShowRateThreshold:0.12,cancellationRateThreshold:0.14,unbookedLeadRateThreshold:0.30};
+const CHIRO1_C = [...Array(14).fill(0).map((_,i)=>({id:`c1mc${i}`,date:'2026-05-15',time:`${9+i%8}:00 AM`,status:'Missed',duration:0,booked:'No',notes:'New patient inquiry'})),...Array(40).fill(0).map((_,i)=>({id:`c1ac${i}`,date:'2026-05-15',time:`${9+i%8}:30 AM`,status:'Answered',duration:150+i*8,booked:i%3===0?'Yes':'No',notes:''}))];
+const CHIRO1_A = [...Array(20).fill(0).map((_,i)=>({id:`c1ns${i}`,date:`2026-05-${8+i%18}`,time:'10:00 AM',type:'Adjustment',provider:'Dr. Martinez',status:'No-Show',value:85,notes:''})),...Array(14).fill(0).map((_,i)=>({id:`c1cn${i}`,date:`2026-05-${8+i}`,time:'2:30 PM',type:'Treatment Session',provider:'Dr. Martinez',status:'Canceled',value:85,notes:''})),...Array(65).fill(0).map((_,i)=>({id:`c1cp${i}`,date:`2026-05-${3+i%22}`,time:'11:00 AM',type:'Adjustment',provider:'Dr. Martinez',status:'Completed',value:85,notes:''}))];
+const CHIRO1_L = [...Array(22).fill(0).map((_,i)=>({id:`c1ul${i}`,date:`2026-05-${4+i%20}`,name:'',phone:'',source:'Website',service:'New Patient Consult',status:'Unbooked',booked:'No',value:85,notes:''})),...Array(10).fill(0).map((_,i)=>({id:`c1bl${i}`,date:`2026-05-${4+i}`,name:'',phone:'',source:'Referral',service:'Adjustment',status:'Booked',booked:'Yes',value:85,notes:''}))];
+const CHIRO1 = {id:'chiro_demo1',name:'Active Life Chiropractic',month:'May 2026',tag:'Demo',isDemo:true,vertical:'chiro',settings:CHIRO1_S,calls:CHIRO1_C,appts:CHIRO1_A,leads:CHIRO1_L,trend:[{month:'Jan 2026',amount:3200},{month:'Feb 2026',amount:3600},{month:'Mar 2026',amount:4100},{month:'Apr 2026',amount:4400},{month:'May 2026',amount:4900}],metrics:calculateMetrics(CHIRO1_C,CHIRO1_A,CHIRO1_L,CHIRO1_S)};
+
+// ── Med Spa demo ──
+const SPA1_S = {avgPatientValue:480,missedCallBookingRate:0.35,leadConversionRate:0.38,missedCallRateThreshold:0.18,noShowRateThreshold:0.10,cancellationRateThreshold:0.15,unbookedLeadRateThreshold:0.35};
+const SPA1_C = [...Array(16).fill(0).map((_,i)=>({id:`s1mc${i}`,date:'2026-05-15',time:`${10+i%8}:00 AM`,status:'Missed',duration:0,booked:'No',notes:'Treatment inquiry'})),...Array(45).fill(0).map((_,i)=>({id:`s1ac${i}`,date:'2026-05-15',time:`${10+i%8}:30 AM`,status:'Answered',duration:200+i*10,booked:i%3===0?'Yes':'No',notes:''}))];
+const SPA1_A = [...Array(10).fill(0).map((_,i)=>({id:`s1ns${i}`,date:`2026-05-${10+i%15}`,time:'11:00 AM',type:'Botox Treatment',provider:'Dr. Lee',status:'No-Show',value:650,notes:''})),...Array(8).fill(0).map((_,i)=>({id:`s1cn${i}`,date:`2026-05-${10+i}`,time:'1:00 PM',type:'Filler Appointment',provider:'Nurse Kim',status:'Canceled',value:800,notes:''})),...Array(50).fill(0).map((_,i)=>({id:`s1cp${i}`,date:`2026-05-${4+i%22}`,time:'10:00 AM',type:i%3===0?'Botox Treatment':'Laser Treatment',provider:i%2===0?'Dr. Lee':'Nurse Kim',status:'Completed',value:i%3===0?650:400,notes:''}))];
+const SPA1_L = [...Array(32).fill(0).map((_,i)=>({id:`s1ul${i}`,date:`2026-05-${2+i%22}`,name:'',phone:'',source:'Instagram',service:'Botox Consult',status:'Unbooked',booked:'No',value:480,notes:''})),...Array(14).fill(0).map((_,i)=>({id:`s1bl${i}`,date:`2026-05-${2+i}`,name:'',phone:'',source:'Website',service:'Treatment',status:'Booked',booked:'Yes',value:480,notes:''}))];
+const SPA1 = {id:'spa_demo1',name:'Glow Aesthetics & Med Spa',month:'May 2026',tag:'Demo',isDemo:true,vertical:'medspa',settings:SPA1_S,calls:SPA1_C,appts:SPA1_A,leads:SPA1_L,trend:[{month:'Jan 2026',amount:14200},{month:'Feb 2026',amount:15800},{month:'Mar 2026',amount:17400},{month:'Apr 2026',amount:18900},{month:'May 2026',amount:21200}],metrics:calculateMetrics(SPA1_C,SPA1_A,SPA1_L,SPA1_S)};
+
+// ── Optometry demo ──
+const OPT1_S = {avgPatientValue:220,missedCallBookingRate:0.32,leadConversionRate:0.40,missedCallRateThreshold:0.10,noShowRateThreshold:0.08,cancellationRateThreshold:0.10,unbookedLeadRateThreshold:0.22};
+const OPT1_C = [...Array(10).fill(0).map((_,i)=>({id:`o1mc${i}`,date:'2026-05-15',time:`${9+i%8}:00 AM`,status:'Missed',duration:0,booked:'No',notes:'Exam inquiry'})),...Array(42).fill(0).map((_,i)=>({id:`o1ac${i}`,date:'2026-05-15',time:`${9+i%8}:30 AM`,status:'Answered',duration:160+i*8,booked:i%4===0?'Yes':'No',notes:''}))];
+const OPT1_A = [...Array(9).fill(0).map((_,i)=>({id:`o1ns${i}`,date:`2026-05-${10+i%15}`,time:'10:30 AM',type:'Comprehensive Exam',provider:'Dr. Thompson',status:'No-Show',value:220,notes:''})),...Array(7).fill(0).map((_,i)=>({id:`o1cn${i}`,date:`2026-05-${10+i}`,time:'2:00 PM',type:'Contact Lens Fitting',provider:'Dr. Thompson',status:'Canceled',value:280,notes:''})),...Array(55).fill(0).map((_,i)=>({id:`o1cp${i}`,date:`2026-05-${4+i%22}`,time:'11:00 AM',type:i%3===0?'Contact Lens Exam':'Comprehensive Exam',provider:'Dr. Thompson',status:'Completed',value:i%3===0?280:220,notes:''}))];
+const OPT1_L = [...Array(16).fill(0).map((_,i)=>({id:`o1ul${i}`,date:`2026-05-${4+i%20}`,name:'',phone:'',source:'Website',service:'Annual Exam',status:'Unbooked',booked:'No',value:220,notes:''})),...Array(10).fill(0).map((_,i)=>({id:`o1bl${i}`,date:`2026-05-${4+i}`,name:'',phone:'',source:'Referral',service:'Exam',status:'Booked',booked:'Yes',value:220,notes:''}))];
+const OPT1 = {id:'opt_demo1',name:'ClearView Eye Care',month:'May 2026',tag:'Demo',isDemo:true,vertical:'optometry',settings:OPT1_S,calls:OPT1_C,appts:OPT1_A,leads:OPT1_L,trend:[{month:'Jan 2026',amount:4800},{month:'Feb 2026',amount:5200},{month:'Mar 2026',amount:5600},{month:'Apr 2026',amount:6000},{month:'May 2026',amount:6500}],metrics:calculateMetrics(OPT1_C,OPT1_A,OPT1_L,OPT1_S)};
+
+const ALL_DEMOS = [DEMO1, DEMO2, DEMO3, MED1, MED2, CHIRO1, SPA1, OPT1];
+
 
 export default function App() {
   const [user,             setUser]             = useState(null);
   const [authChecked,      setAuthChecked]      = useState(false);
   const [page,             setPage]             = useState('home');
-  const [practices,        setPractices]        = useState([DEMO1, DEMO2, DEMO3]);
+  const [practices,        setPractices]        = useState(ALL_DEMOS);
   const [activePracticeId, setActivePracticeId] = useState('demo1');
   const [showTour, setShowTour] = useState(false);
+  const [activeVertical, setActiveVertical] = useState(DEFAULT_VERTICAL);
 
   useEffect(() => {
     if (window.location.search.includes('demo=true')) setShowTour(true);
@@ -231,7 +271,7 @@ export default function App() {
 
   async function loadPractices() {
     const { data: pracData } = await supabase.from('practices').select('*').order('created_at');
-    if (!pracData?.length) { setPractices([DEMO1, DEMO2, DEMO3]); return; }
+    if (!pracData?.length) { setPractices(ALL_DEMOS); return; }
 
     const loaded = await Promise.all(pracData.map(async (p) => {
       const [{ data: calls }, { data: appts }, { data: leads }] = await Promise.all([
@@ -262,8 +302,32 @@ export default function App() {
       return { id:p.id, name:p.name, month:p.month, tag:'Client', settings, calls:c, appts:a, leads:l, trend, metrics:m };
     }));
 
-    setPractices([DEMO1, DEMO2, DEMO3, ...loaded]);
+    setPractices([...ALL_DEMOS, ...loaded]);
     if (loaded.length) setActivePracticeId(loaded[0].id);
+  }
+
+  async function deletePractice(id) {
+    // Remove from Supabase
+    await supabase.from('calls').delete().eq('practice_id', id);
+    await supabase.from('appointments').delete().eq('practice_id', id);
+    await supabase.from('leads').delete().eq('practice_id', id);
+    await supabase.from('recovery_status').delete().eq('practice_id', id);
+    await supabase.from('month_snapshots').delete().eq('practice_id', id);
+    await supabase.from('practices').delete().eq('id', id);
+    // Remove from state
+    setPractices(prev => prev.filter(p => p.id !== id));
+    setActivePracticeId(prev => prev === id ? (practices.find(p => p.id !== id)?.id || 'demo1') : prev);
+    setPage('home');
+  }
+
+  async function archivePractice(id) {
+    await supabase.from('practices').update({ archived: true }).eq('id', id);
+    setPractices(prev => prev.map(p => p.id === id ? { ...p, archived: true } : p));
+  }
+
+  async function unarchivePractice(id) {
+    await supabase.from('practices').update({ archived: false }).eq('id', id);
+    setPractices(prev => prev.map(p => p.id === id ? { ...p, archived: false } : p));
   }
 
   async function addPractice(name, month) {
@@ -295,10 +359,12 @@ export default function App() {
     }));
   }
 
-  const practice = practices.find(p => p.id === activePracticeId) || practices[0];
+  const verticalPractices = practices.filter(p => { if (p.isDemo) return p.vertical === activeVertical; return p.vertical ? p.vertical === activeVertical : activeVertical === 'dental'; });
+  const practice = verticalPractices.find(p => p.id === activePracticeId) || verticalPractices[0];
   const liveMetrics = practice ? calculateMetrics(practice.calls || [], practice.appts || [], practice.leads || [], practice.settings || {}) : null;
-  const pageProps = { practice, metrics: liveMetrics, updatePractice, setPage, user, practices, setActivePracticeId, activePracticeId };
-  const pages = { home:AdminHome, admin_settings:AdminSettings, onboarding:OnboardingPage, dashboard:Dashboard, leaks:LeakPage, recovery:RecoveryPage, providers:ProvidersPage, upload:UploadPage, report:ReportPage, settings:SettingsPage };
+  const practiceCounts = practices.reduce((acc,p) => { if(p.vertical){ acc[p.vertical]=(acc[p.vertical]||0)+1; } return acc; }, {});
+  const pageProps = { practice, metrics: liveMetrics, updatePractice, deletePractice, archivePractice, unarchivePractice, setPage, user, practices: verticalPractices, allPractices: practices, setActivePracticeId, activePracticeId, activeVertical, setActiveVertical, practiceCounts };
+  const pages = { vertical_selector:VerticalSelector, home:AdminHome, admin_settings:AdminSettings, onboarding:OnboardingPage, dashboard:Dashboard, leaks:LeakPage, recovery:RecoveryPage, providers:ProvidersPage, upload:UploadPage, report:ReportPage, settings:SettingsPage };
   const PageComponent = pages[page] || AdminHome;
 
   if (!authChecked) return <div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',background:'var(--bg)',color:'var(--text3)',fontSize:14}}>Loading…</div>;
@@ -306,9 +372,25 @@ export default function App() {
 
   return (
     <div style={{display:'flex',minHeight:'100vh'}}>
-      <Sidebar page={page} setPage={setPage} practices={practices} activePracticeId={activePracticeId} setActivePracticeId={setActivePracticeId} onAddPractice={addPractice} user={user} />
+      <Sidebar page={page} setPage={setPage} practices={verticalPractices} activePracticeId={activePracticeId} setActivePracticeId={setActivePracticeId} onAddPractice={addPractice} user={user} activeVertical={activeVertical} setActiveVertical={setActiveVertical} />
       <main style={{marginLeft:'var(--sidebar)',flex:1,padding:'2rem',maxWidth:'calc(100vw - var(--sidebar))',overflowX:'hidden'}}>
+        {page === 'vertical_selector' ? (
+        <VerticalSelector
+          activeVertical={activeVertical}
+          practiceCounts={practiceCounts}
+          onSelect={(v) => {
+            setActiveVertical(v);
+            // Switch to first practice in that vertical
+            const firstInVertical = practices.find(p => p.vertical === v) ||
+              ALL_DEMOS.filter(p => p.vertical).find(p => p.vertical === v) ||
+              demoPractices[0];
+            if (firstInVertical) setActivePracticeId(firstInVertical.id);
+            setPage('home');
+          }}
+        />
+      ) : (
         <PageComponent {...pageProps} />
+      )}
       </main>
       {showTour && (
         <DemoTour

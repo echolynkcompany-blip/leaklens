@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '../supabase';
+import { VERTICALS } from '../verticals';
 
 const ADMIN_NAV = [
   { id: 'home',          label: 'Admin Home',      icon: '⌂' },
@@ -17,7 +18,7 @@ const PRACTICE_NAV = [
   { id: 'settings',  label: 'Client Settings', icon: '◉' },
 ];
 
-export default function Sidebar({ page, setPage, practices, activePracticeId, setActivePracticeId, onAddPractice, user }) {
+export default function Sidebar({ page, setPage, practices, activePracticeId, setActivePracticeId, onAddPractice, user, activeVertical, setActiveVertical }) {
   const [showAdd, setShowAdd] = useState(false);
   const [name, setName] = useState('');
   const [month, setMonth] = useState('');
@@ -48,6 +49,21 @@ export default function Sidebar({ page, setPage, practices, activePracticeId, se
       </div>
 
       {/* Practices */}
+
+      {/* Vertical badge */}
+      {activeVertical && (
+        <div style={{ padding:'0.5rem 0.875rem', borderBottom:'1px solid var(--border)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+          <div style={{ display:'flex', alignItems:'center', gap:6 }}>
+            <span style={{ fontSize:14 }}>{(VERTICALS[activeVertical]||VERTICALS.dental).icon}</span>
+            <span style={{ fontSize:11, fontWeight:700, color:(VERTICALS[activeVertical]||VERTICALS.dental).color }}>{(VERTICALS[activeVertical]||VERTICALS.dental).label}</span>
+          </div>
+          <button onClick={() => setPage('vertical_selector')}
+            style={{ fontSize:10, color:'var(--text3)', background:'transparent', border:'0.5px solid var(--border2)', padding:'2px 8px', borderRadius:5, cursor:'pointer' }}>
+            Switch
+          </button>
+        </div>
+      )}
+
       <div style={S.section}>
         <div style={S.label}>Practices</div>
         <div style={{ maxHeight: 180, overflowY: 'auto' }}>

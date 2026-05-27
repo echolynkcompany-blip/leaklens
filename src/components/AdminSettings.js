@@ -272,7 +272,14 @@ export default function AdminSettings({ practices }) {
                       </td>
                       <td style={{ padding:'10px 8px', whiteSpace:'nowrap' }}>
                         <button onClick={() => setInvoiceClient(b)}
-                          style={{ background:'var(--teal-dim)', border:'1px solid var(--teal-border)', color:'var(--teal)', cursor:'pointer', fontSize:11, fontWeight:600, padding:'4px 8px', borderRadius:6, marginRight:6 }}>Invoice</button>
+                          style={{ background:'var(--teal-dim)', border:'1px solid var(--teal-border)', color:'var(--teal)', cursor:'pointer', fontSize:11, fontWeight:600, padding:'4px 8px', borderRadius:6, marginRight:4 }}>Invoice</button>
+                        <button onClick={() => {
+                          const p = practices.find(p => p.id === b.practice_id);
+                          if (p?.archived) { unarchivePractice?.(b.practice_id); }
+                          else { archivePractice?.(b.practice_id); }
+                        }} style={{ background:'var(--amber-dim)', border:'1px solid rgba(176,125,42,0.25)', color:'var(--amber)', cursor:'pointer', fontSize:11, fontWeight:600, padding:'4px 8px', borderRadius:6, marginRight:4 }}>
+                          {practices.find(p => p.id === b.practice_id)?.archived ? 'Unarchive' : 'Archive'}
+                        </button>
                         <button onClick={() => removeClient(b.practice_id)}
                           style={{ background:'transparent', border:'none', color:'var(--text3)', cursor:'pointer', fontSize:12 }}>✕</button>
                       </td>
@@ -321,13 +328,6 @@ export default function AdminSettings({ practices }) {
           </div>
         </>
       )}
-    {invoiceClient && (
-      <InvoiceModal
-        client={invoiceClient}
-        settings={form}
-        onClose={() => setInvoiceClient(null)}
-      />
-    )}
     </div>
   );
 }
