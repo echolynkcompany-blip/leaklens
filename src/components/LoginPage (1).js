@@ -7,6 +7,7 @@ export default function LoginPage({ onLogin }) {
   const [error,    setError]    = useState('');
   const [loading,  setLoading]  = useState(false);
 
+  // Pre-warm Supabase connection on page load
   useEffect(() => {
     supabase.auth.getSession().catch(() => {});
   }, []);
@@ -64,8 +65,13 @@ export default function LoginPage({ onLogin }) {
               <div style={S.error}>{error}</div>
             )}
 
-            <button type="submit" disabled={loading} style={S.btn}>
-              {loading ? <><span style={{width:14,height:14,border:'2px solid rgba(255,255,255,0.3)',borderTop:'2px solid #fff',borderRadius:'50%',animation:'spin 0.7s linear infinite',display:'inline-block',marginRight:6}} />Signing in…</> : 'Sign in'}
+            <button type="submit" disabled={loading} style={{ ...S.btn, display:'flex', alignItems:'center', justifyContent:'center', gap:8 }}>
+              {loading ? (
+                <>
+                  <span style={S.spinner} />
+                  Signing in…
+                </>
+              ) : 'Sign in'}
             </button>
           </form>
 
@@ -186,6 +192,15 @@ const S = {
     fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase',
     cursor: 'pointer', marginTop: 4, fontFamily: 'Inter, Arial, sans-serif',
     transition: 'background 0.15s',
+  },
+  spinner: {
+    width: 14,
+    height: 14,
+    border: '2px solid rgba(255,255,255,0.3)',
+    borderTop: '2px solid #fff',
+    borderRadius: '50%',
+    animation: 'spin 0.7s linear infinite',
+    flexShrink: 0,
   },
   footer: {
     marginTop: 'auto', paddingTop: 32, fontSize: 11,
