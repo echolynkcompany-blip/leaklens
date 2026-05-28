@@ -58,7 +58,7 @@ export function InsightBox({ children }) {
 }
 
 export function LeakBarChart({ data }) {
-  const lightColors = ['var(--chart-red)','var(--chart-amber)','var(--chart-purple)','var(--chart-blue)'];
+  const chartColors = ['var(--chart-red)','var(--chart-amber)','var(--chart-purple)','var(--chart-blue)'];
   return (
     <ResponsiveContainer width="100%" height={200}>
       <BarChart data={data} barSize={32}>
@@ -68,11 +68,11 @@ export function LeakBarChart({ data }) {
         <Tooltip
           formatter={v => [fmt(v), 'Leak']}
           contentStyle={{ background:'var(--bg2)', border:'1px solid var(--border)',
-            borderRadius:8, fontSize:12, boxShadow:'var(--shadow)' }}
-          cursor={{ fill:'rgba(90,122,74,0.04)' }}
+            borderRadius:8, fontSize:12, boxShadow:'var(--shadow)', color:'var(--text)' }}
+          cursor={{ fill:'rgba(29,158,117,0.08)' }}
         />
         <Bar dataKey="amount" radius={[6,6,0,0]}>
-          {data.map((d, i) => <Cell key={i} fill={lightColors[i % lightColors.length]} />)}
+          {data.map((d, i) => <Cell key={i} fill={chartColors[i % chartColors.length]} />)}
         </Bar>
       </BarChart>
     </ResponsiveContainer>
@@ -89,7 +89,7 @@ export function TrendLineChart({ data }) {
         <Tooltip
           formatter={v => [fmt(v), 'Total leak']}
           contentStyle={{ background:'var(--bg2)', border:'1px solid var(--border)',
-            borderRadius:8, fontSize:12, boxShadow:'var(--shadow)' }}
+            borderRadius:8, fontSize:12, boxShadow:'var(--shadow)', color:'var(--text)' }}
         />
         <Line type="monotone" dataKey="amount" stroke="var(--teal)" strokeWidth={2.5}
           dot={{ fill:'var(--teal)', r:4, strokeWidth:0 }} activeDot={{ r:6 }} />

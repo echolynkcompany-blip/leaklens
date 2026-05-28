@@ -49,23 +49,22 @@ export default function Sidebar({ page, setPage, practices, activePracticeId, se
       </div>
 
       {/* Practices */}
-
-      {/* Vertical badge */}
+      <div style={S.section}>
+        {/* Vertical badge */}
       {activeVertical && (
-        <div style={{ padding:'0.5rem 0.875rem', borderBottom:'1px solid var(--border)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+        <div style={{ padding:'0.5rem 0.875rem', borderBottom:'1px solid #2A7A6A', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
           <div style={{ display:'flex', alignItems:'center', gap:6 }}>
             <span style={{ fontSize:14 }}>{(VERTICALS[activeVertical]||VERTICALS.dental).icon}</span>
             <span style={{ fontSize:11, fontWeight:700, color:(VERTICALS[activeVertical]||VERTICALS.dental).color }}>{(VERTICALS[activeVertical]||VERTICALS.dental).label}</span>
           </div>
           <button onClick={() => setPage('vertical_selector')}
-            style={{ fontSize:10, color:'var(--text3)', background:'transparent', border:'0.5px solid var(--border2)', padding:'2px 8px', borderRadius:5, cursor:'pointer' }}>
+            style={{ fontSize:10, color:'#5DCAA5', background:'transparent', border:'0.5px solid #3A9A88', padding:'2px 8px', borderRadius:5, cursor:'pointer' }}>
             Switch
           </button>
         </div>
       )}
 
-      <div style={S.section}>
-        <div style={S.label}>Practices</div>
+<div style={S.label}>Practices</div>
         <div style={{ maxHeight: 180, overflowY: 'auto' }}>
           {practices.map(p => (
             <button key={p.id} style={{ ...S.practiceBtn, ...(p.id === activePracticeId ? S.practiceBtnActive : {}) }}
@@ -125,23 +124,23 @@ export default function Sidebar({ page, setPage, practices, activePracticeId, se
 }
 
 const S = {
-  sidebar: { width: 'var(--sidebar)', background: 'var(--bg2)', borderRight: '1px solid var(--border)', position: 'fixed', top: 0, left: 0, height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', zIndex: 100, boxShadow: 'var(--shadow)' },
-  logo: { display: 'flex', alignItems: 'center', gap: 10, padding: '1.25rem 1rem', borderBottom: '1px solid var(--border)', flexShrink: 0 },
-  mark: { width: 34, height: 34, borderRadius: 9, background: 'var(--teal)', color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, fontFamily: 'var(--mono)', flexShrink: 0, boxShadow: '0 2px 6px rgba(90,122,74,0.35)' },
-  title: { fontSize: 14, fontWeight: 700, color: 'var(--text)', letterSpacing: '-0.3px' },
-  sub: { fontSize: 10, color: 'var(--text3)', marginTop: 1 },
-  section: { padding: '0.875rem', borderBottom: '1px solid var(--border)', flexShrink: 0 },
-  label: { fontSize: 10, fontWeight: 700, color: 'var(--text3)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.5rem', padding: '0 4px' },
+  sidebar: { width: 'var(--sidebar)', background: '#0D3D36', borderRight: '1px solid #2A7A6A', position: 'fixed', top: 0, left: 0, height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', zIndex: 100, boxShadow: 'var(--shadow)' },
+  logo: { display: 'flex', alignItems: 'center', gap: 10, padding: '1.25rem 1rem', borderBottom: '1px solid #2A7A6A', flexShrink: 0 },
+  mark: { width: 34, height: 34, borderRadius: 9, background: '#1D9E75', color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, fontFamily: 'var(--mono)', flexShrink: 0, boxShadow: '0 2px 6px rgba(29,158,117,0.40)' },
+  title: { fontSize: 14, fontWeight: 700, color: '#E8F5F0', letterSpacing: '-0.3px' },
+  sub: { fontSize: 10, color: '#5DCAA5', marginTop: 1 },
+  section: { padding: '0.875rem', borderBottom: '1px solid #2A7A6A', flexShrink: 0 },
+  label: { fontSize: 10, fontWeight: 700, color: '#5DCAA5', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.5rem', padding: '0 4px' },
   practiceBtn: { display: 'flex', alignItems: 'center', gap: 8, width: '100%', padding: '7px 8px', borderRadius: 8, border: '1px solid transparent', background: 'transparent', cursor: 'pointer', marginBottom: 2, textAlign: 'left' },
-  practiceBtnActive: { background: 'var(--teal-dim)', border: '1px solid var(--teal-border)' },
+  practiceBtnActive: { background: 'rgba(29,158,117,0.18)', border: '1px solid rgba(29,158,117,0.35)' },
   dot: { width: 7, height: 7, borderRadius: '50%', flexShrink: 0 },
-  input: { width: '100%', padding: '7px 10px', borderRadius: 7, border: '1px solid var(--border2)', background: 'var(--bg3)', color: 'var(--text)', fontSize: 12, outline: 'none' },
-  addBtn: { width: '100%', padding: '7px 10px', borderRadius: 8, border: '1px dashed var(--border2)', background: 'transparent', color: 'var(--text3)', cursor: 'pointer', fontSize: 12, marginTop: 4, textAlign: 'left' },
-  addOk: { flex: 1, padding: '6px', borderRadius: 7, border: 'none', background: 'var(--teal)', color: '#FFFFFF', fontSize: 12, fontWeight: 600, cursor: 'pointer' },
-  addCancel: { flex: 1, padding: '6px', borderRadius: 7, border: '1px solid var(--border2)', background: 'transparent', color: 'var(--text2)', fontSize: 12, cursor: 'pointer' },
-  navBtn: { display: 'flex', alignItems: 'center', gap: 9, width: '100%', padding: '8px 12px', borderRadius: 8, border: 'none', background: 'transparent', color: 'var(--text2)', cursor: 'pointer', fontSize: 13, marginBottom: 1, textAlign: 'left', fontWeight: 500 },
-  navActive: { background: 'var(--teal-dim)', color: 'var(--teal)', fontWeight: 600 },
-  userRow: { padding: '0.875rem', borderTop: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 },
-  userAvatar: { width: 30, height: 30, borderRadius: '50%', background: 'var(--teal-dim)', color: 'var(--teal)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, flexShrink: 0, border: '1.5px solid var(--teal-border)' },
-  signOut: { padding: '5px 8px', borderRadius: 7, border: '1px solid var(--border2)', background: 'transparent', color: 'var(--text3)', fontSize: 13, cursor: 'pointer' },
+  input: { width: '100%', padding: '7px 10px', borderRadius: 7, border: '1px solid #3A9A88', background: '#1A5248', color: '#E8F5F0', fontSize: 12, outline: 'none' },
+  addBtn: { width: '100%', padding: '7px 10px', borderRadius: 8, border: '1px dashed #3A9A88', background: 'transparent', color: '#5DCAA5', cursor: 'pointer', fontSize: 12, marginTop: 4, textAlign: 'left' },
+  addOk: { flex: 1, padding: '6px', borderRadius: 7, border: 'none', background: '#1D9E75', color: '#FFFFFF', fontSize: 12, fontWeight: 600, cursor: 'pointer' },
+  addCancel: { flex: 1, padding: '6px', borderRadius: 7, border: '1px solid #3A9A88', background: 'transparent', color: '#9FE1CB', fontSize: 12, cursor: 'pointer' },
+  navBtn: { display: 'flex', alignItems: 'center', gap: 9, width: '100%', padding: '8px 12px', borderRadius: 8, border: 'none', background: 'transparent', color: '#9FE1CB', cursor: 'pointer', fontSize: 13, marginBottom: 1, textAlign: 'left', fontWeight: 500 },
+  navActive: { background: 'rgba(29,158,117,0.18)', color: '#1D9E75', fontWeight: 600 },
+  userRow: { padding: '0.875rem', borderTop: '1px solid #2A7A6A', display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 },
+  userAvatar: { width: 30, height: 30, borderRadius: '50%', background: 'rgba(29,158,117,0.2)', color: '#1D9E75', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, flexShrink: 0, border: '1.5px solid rgba(29,158,117,0.35)' },
+  signOut: { padding: '5px 8px', borderRadius: 7, border: '1px solid #3A9A88', background: 'transparent', color: '#5DCAA5', fontSize: 13, cursor: 'pointer' },
 };
