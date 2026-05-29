@@ -126,7 +126,7 @@ const CROSSES = [
 const S = {
   page: {
     minHeight: '100vh',
-    background: '#0A2420',
+    background: '#0A1F1A',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -143,7 +143,7 @@ const S = {
     boxShadow: '0 20px 60px rgba(0,0,0,0.4)',
   },
   left: {
-    background: '#0D3D36',
+    background: '#0D2920',
     padding: '48px 44px',
     display: 'flex',
     flexDirection: 'column',
@@ -152,14 +152,14 @@ const S = {
     display: 'flex', alignItems: 'center', gap: 10, marginBottom: 44,
   },
   logoMark: {
-    width: 36, height: 36, borderRadius: 9, background: '#1D9E75',
+    width: 36, height: 36, borderRadius: 9, background: '#22C78A',
     color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center',
     fontSize: 12, fontWeight: 700,
   },
   logoName: { fontSize: 15, fontWeight: 700, color: '#fff' },
-  logoSub:  { fontSize: 10, color: '#5DCAA5', marginTop: 1 },
+  logoSub:  { fontSize: 10, color: '#6AB89E', marginTop: 1 },
   tag: {
-    fontSize: 10, color: '#5DCAA5', letterSpacing: '0.12em',
+    fontSize: 10, color: '#6AB89E', letterSpacing: '0.12em',
     textTransform: 'uppercase', fontWeight: 600, marginBottom: 16,
   },
   headline: {
@@ -167,7 +167,7 @@ const S = {
     lineHeight: 1.2, margin: '0 0 8px',
   },
   signInSub: {
-    fontSize: 12, color: '#5DCAA5', marginBottom: 32,
+    fontSize: 12, color: '#6AB89E', marginBottom: 32,
     letterSpacing: '0.04em', textTransform: 'uppercase',
   },
   field: { marginBottom: 18 },
@@ -177,7 +177,7 @@ const S = {
   },
   input: {
     width: '100%', padding: '11px 14px',
-    background: '#1A5248', border: '0.5px solid #2A7A6A',
+    background: '#112A24', border: '0.5px solid #1D4A3E',
     borderRadius: 7, color: '#fff', fontSize: 13, outline: 'none',
     fontFamily: 'Inter, Arial, sans-serif',
   },
@@ -187,7 +187,7 @@ const S = {
     padding: '8px 12px', marginBottom: 12,
   },
   btn: {
-    width: '100%', padding: '13px', background: '#1D9E75',
+    width: '100%', padding: '13px', background: '#22C78A',
     border: 'none', borderRadius: 7, color: '#fff', fontSize: 13,
     fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase',
     cursor: 'pointer', marginTop: 4, fontFamily: 'Inter, Arial, sans-serif',
@@ -207,7 +207,7 @@ const S = {
     color: '#3A7A6A', textAlign: 'center',
   },
   right: {
-    background: '#0A5C5A',
+    background: '#0F3D35',
     position: 'relative',
     overflow: 'hidden',
     display: 'flex',
@@ -233,7 +233,7 @@ const S = {
   },
   pill: {
     fontSize: 11, background: 'rgba(255,255,255,0.08)',
-    color: '#9FE1CB', padding: '4px 10px',
+    color: '#A8D8C8', padding: '4px 10px',
     borderRadius: 20, border: '0.5px solid rgba(157,225,203,0.2)',
   },
 };

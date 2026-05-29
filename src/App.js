@@ -16,6 +16,7 @@ import OnboardingPage from './components/OnboardingPage';
 import VerticalSelector from './components/VerticalSelector';
 import { VERTICALS, DEFAULT_VERTICAL } from './verticals';
 import DemoTour from './components/DemoTour';
+import TopNav from './components/TopNav';
 
 const DEMO1_TREND = [
   {month:'Jan',amount:9400},{month:'Feb',amount:10200},{month:'Mar',amount:11800},{month:'Apr',amount:10900},{month:'May',amount:12100},
@@ -370,7 +371,8 @@ export default function App() {
   return (
     <div style={{display:'flex',minHeight:'100vh'}}>
       <Sidebar page={page} setPage={setPage} practices={verticalPractices} activePracticeId={activePracticeId} setActivePracticeId={setActivePracticeId} onAddPractice={addPractice} user={user} activeVertical={activeVertical} setActiveVertical={setActiveVertical} />
-      <main style={{marginLeft:'var(--sidebar)',flex:1,padding:'2rem',maxWidth:'calc(100vw - var(--sidebar))',overflowX:'hidden'}}>
+      <TopNav page={page} setPage={setPage} practice={practice} />
+      <main style={{marginLeft:'var(--sidebar)',flex:1,padding:'2rem',paddingTop:'calc(52px + 2rem)',maxWidth:'calc(100vw - var(--sidebar))',overflowX:'hidden'}}>
         {page === 'vertical_selector' ? (
         <VerticalSelector
           activeVertical={activeVertical}
