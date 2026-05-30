@@ -14,7 +14,7 @@ export default function Dashboard({ practice, metrics, setPage }) {
     {name:'Cancellations',amount:metrics.cancellationLeak,color:'var(--purple)'},
     {name:'Unbooked leads',amount:metrics.unbookedLeadLeak,color:'var(--blue)'},
   ];
-  const trend = practice.name === 'Sunrise Dental Studio' ? TREND : [{month:'Current',amount:metrics.totalLeak}];
+  const trend = (practice.trend && practice.trend.length > 1) ? practice.trend : (practice.name === 'Sunrise Dental Studio' ? TREND : [{month: practice.month || 'Current', amount: metrics.totalLeak}]);
 
   return (
     <div className="fade-in">

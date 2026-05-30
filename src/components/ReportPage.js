@@ -213,7 +213,9 @@ export default function ReportPage({ practice, metrics }) {
     doc.text('LeakLens  ·  An Echolynk Product', 15, 290);
     doc.text(new Date().toLocaleDateString(), W - 15, 290, { align: 'right' });
 
-    doc.save(`LeakLens-${practice.name.replace(/\s+/g, '-')}-${practice.month.replace(/\s+/g, '-')}.pdf`);
+    const cleanName = (practice.name||'Practice').replace(/[^a-zA-Z0-9]/g,'-').replace(/-+/g,'-');
+    const cleanMonth = (practice.month||'').replace(/[^a-zA-Z0-9]/g,'-').replace(/-+/g,'-');
+    doc.save(`LeakLens-Report-${cleanName}-${cleanMonth}.pdf`);
   }
 
   return (

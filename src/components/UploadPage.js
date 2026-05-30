@@ -111,7 +111,7 @@ export default function UploadPage({ practice, updatePractice }) {
               <div style={{fontSize:14,fontWeight:500,color:'var(--text)',marginBottom:4}}>{ut.label}</div>
               <div style={{fontSize:12,color:'var(--text3)'}}>{ut.hint}</div>
               {statuses[ut.id] && <div style={{marginTop:10,fontSize:12,color:'var(--teal)',fontWeight:500}}>{statuses[ut.id]}</div>}
-              {errors[ut.id]   && <div style={{marginTop:10,fontSize:12,color:'var(--red)'}}>{errors[ut.id]}</div>}
+              {errors[ut.id] && <div style={{marginTop:10,padding:'8px 12px',borderRadius:7,background:'var(--red-dim)',border:'1px solid rgba(255,107,107,0.2)',fontSize:12,color:'var(--red)',lineHeight:1.6}}><strong>Upload error:</strong> {errors[ut.id]}<br/><span style={{fontSize:11,opacity:0.8}}>Check the CSV Format Reference document for required column names.</span></div>}
             </div>
           </div>
         ))}
