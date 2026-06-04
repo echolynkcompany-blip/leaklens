@@ -244,6 +244,7 @@ const ALL_DEMOS = [DEMO1, DEMO2, DEMO3, MED1, MED2, CHIRO1, SPA1, OPT1];
 export default function App() {
   const [user,             setUser]             = useState(null);
   const [authChecked,      setAuthChecked]      = useState(false);
+  const [profile,          setProfile]          = useState(null);
   const [page,             setPage]             = useState('home');
   const [practices,        setPractices]        = useState(ALL_DEMOS);
   const [activePracticeId, setActivePracticeId] = useState('demo1');
@@ -256,11 +257,42 @@ export default function App() {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
-      setUser(data.session?.user || null);
+      const u = data.session?.user || null;
+      setUser(u);
       setAuthChecked(true);
+      if (u) {
+        supabase.from('profiles')
+          .select('role, practice_id, is_leaklens_admin')
+          .eq('id', u.id)
+          .single()
+          .then(({ data: prof }) => {
+            setProfile(prof);
+            if (prof && !prof.is_leaklens_admin) {
+              setPage('dashboard');
+              if (prof.practice_id) setActivePracticeId(prof.practice_id);
+            }
+          });
+      }
     });
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user || null);
+      const u = session?.user || null;
+      setUser(u);
+      if (u) {
+        supabase.from('profiles')
+          .select('role, practice_id, is_leaklens_admin')
+          .eq('id', u.id)
+          .single()
+          .then(({ data: prof }) => {
+            setProfile(prof);
+            // Non-admin users go straight to their practice dashboard
+            if (prof && !prof.is_leaklens_admin) {
+              setPage('dashboard');
+              if (prof.practice_id) setActivePracticeId(prof.practice_id);
+            }
+          });
+      } else {
+        setProfile(null);
+      }
     });
     return () => listener.subscription.unsubscribe();
   }, []);
@@ -357,11 +389,12 @@ export default function App() {
     }));
   }
 
-  const verticalPractices = practices.filter(p => { if (p.isDemo) return p.vertical === activeVertical; return p.vertical ? p.vertical === activeVertical : activeVertical === 'dental'; });
+  const verticalPractices = practices.filter(p => !p.vertical || p.vertical === activeVertical);
   const practice = verticalPractices.find(p => p.id === activePracticeId) || verticalPractices[0];
   const liveMetrics = practice ? calculateMetrics(practice.calls || [], practice.appts || [], practice.leads || [], practice.settings || {}) : null;
   const practiceCounts = practices.reduce((acc,p) => { if(p.vertical){ acc[p.vertical]=(acc[p.vertical]||0)+1; } return acc; }, {});
-  const pageProps = { practice, metrics: liveMetrics, updatePractice, deletePractice, archivePractice, unarchivePractice, setPage, user, practices: verticalPractices, allPractices: practices, setActivePracticeId, activePracticeId, activeVertical, setActiveVertical, practiceCounts };
+  const isAdmin = profile?.is_leaklens_admin === true || !profile; // fallback true if no profiles table yet
+  const pageProps = { practice, metrics: liveMetrics, updatePractice, deletePractice, archivePractice, unarchivePractice, setPage, user, profile, isAdmin, practices: verticalPractices, allPractices: practices, setActivePracticeId, activePracticeId, activeVertical, setActiveVertical, practiceCounts };
   const pages = { vertical_selector:VerticalSelector, home:AdminHome, admin_settings:AdminSettings, onboarding:OnboardingPage, dashboard:Dashboard, leaks:LeakPage, recovery:RecoveryPage, providers:ProvidersPage, upload:UploadPage, report:ReportPage, settings:SettingsPage };
   const PageComponent = pages[page] || AdminHome;
 
@@ -370,7 +403,7 @@ export default function App() {
 
   return (
     <div style={{display:'flex',minHeight:'100vh'}}>
-      <Sidebar page={page} setPage={setPage} practices={verticalPractices} activePracticeId={activePracticeId} setActivePracticeId={setActivePracticeId} onAddPractice={addPractice} user={user} activeVertical={activeVertical} setActiveVertical={setActiveVertical} />
+      <Sidebar page={page} setPage={setPage} practices={verticalPractices} activePracticeId={activePracticeId} setActivePracticeId={setActivePracticeId} onAddPractice={addPractice} user={user} activeVertical={activeVertical} setActiveVertical={setActiveVertical} isAdmin={isAdmin} />
       <TopNav page={page} setPage={setPage} practice={practice} />
       <main style={{marginLeft:'var(--sidebar)',flex:1,padding:'2rem',paddingTop:'calc(52px + 2rem)',maxWidth:'calc(100vw - var(--sidebar))',overflowX:'hidden'}}>
         {page === 'vertical_selector' ? (

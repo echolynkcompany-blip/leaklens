@@ -7,7 +7,7 @@ const ADMIN_NAV = [
   { id: 'admin_settings', label: 'Admin Settings', icon: '⚙' },
 ];
 
-export default function Sidebar({ page, setPage, practices, activePracticeId, setActivePracticeId, onAddPractice, user, activeVertical, setActiveVertical }) {
+export default function Sidebar({ page, setPage, practices, activePracticeId, setActivePracticeId, onAddPractice, user, activeVertical, setActiveVertical, isAdmin = true }) {
   const [showAdd, setShowAdd] = useState(false);
   const [name,    setName]    = useState('');
   const [month,   setMonth]   = useState('');
@@ -46,10 +46,10 @@ export default function Sidebar({ page, setPage, practices, activePracticeId, se
             <span style={{ fontSize:14 }}>{(VERTICALS[activeVertical]||VERTICALS.dental).icon}</span>
             <span style={{ fontSize:11, fontWeight:700, color:(VERTICALS[activeVertical]||VERTICALS.dental).color }}>{(VERTICALS[activeVertical]||VERTICALS.dental).label}</span>
           </div>
-          <button onClick={() => setPage('vertical_selector')}
+          {isAdmin && <button onClick={() => setPage('vertical_selector')}
             style={{ fontSize:10, color:'#5DCAA5', background:'transparent', border:'0.5px solid #3A9A88', padding:'2px 8px', borderRadius:5, cursor:'pointer' }}>
             Switch
-          </button>
+          </button>}
         </div>
       )}
 
@@ -75,7 +75,7 @@ export default function Sidebar({ page, setPage, practices, activePracticeId, se
           ))}
         </div>
 
-        {showAdd ? (
+        {isAdmin && showAdd ? (
           <form onSubmit={handleAdd} style={{ marginTop:6 }}>
             <input value={name} onChange={e => setName(e.target.value)} placeholder="Practice name" style={S.input} autoFocus />
             <input value={month} onChange={e => setMonth(e.target.value)} placeholder="Month (e.g. June 2026)" style={{ ...S.input, marginTop:5 }} />
@@ -85,13 +85,13 @@ export default function Sidebar({ page, setPage, practices, activePracticeId, se
             </div>
           </form>
         ) : (
-          <button onClick={() => setShowAdd(true)} style={S.addBtn}>+ Add practice</button>
+          isAdmin ? <button onClick={() => setShowAdd(true)} style={S.addBtn}>+ Add practice</button> : null
         )}
       </div>
 
-      {/* Admin nav */}
+      {/* Admin nav — only visible to admins */}
       <div style={{ flex:1, overflowY:'auto', padding:'0.5rem 0' }}>
-        <div style={S.section}>
+        {isAdmin && <div style={S.section}>
           <div style={S.label}>Admin</div>
           {ADMIN_NAV.map(item => (
             <button key={item.id}
@@ -101,7 +101,7 @@ export default function Sidebar({ page, setPage, practices, activePracticeId, se
               <span>{item.label}</span>
             </button>
           ))}
-        </div>
+        </div>}
       </div>
 
       {/* User row */}
